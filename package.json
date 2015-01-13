@@ -1,26 +1,22 @@
 {
-  "name": "modui-popup",
-  "version": "0.0.5",
+  "name": "modui-calendar",
+  "version": "0.0.0",
   "description": "",
-  "main": "moduiPopup.js",
-  "test": "test/test_moduiPopup.js",
-  "style": "*.scss",
+  "main": "moduiCalendar.js",
+  "test": "test/test_moduiCalendar.js",
   "keywords": [
     "modui"
   ],
   "author": "Rotunda Software",
   "license": "ISC",
-  "transforms": [
-    "sass-css-stream"
-  ],
   "dependencies": {
     "backbone": "^1.1.2",
     "jquery": "^2.1.1",
     "modui-base": "^0.1.5",
-    "sass-css-stream": "^0.1.1",
     "underscore": "^1.7.0"
   },
   "devDependencies": {
-    "should": "^4.1.0"
+    "mocha": "^2.1.0",
+    "should": "^4.4.4"
   }
 }

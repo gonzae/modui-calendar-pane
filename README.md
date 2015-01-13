@@ -1,82 +1,93 @@
-# modui-popup
+# modui-calendar
 
-A popup balloon for the backbone.js-based modui suite.
-
-__For demos see [the modui-popup home page](http://rotundasoftware.github.io/modui-popup/).__
+A calendar for the backbone.js-based modui suite.
 
 ## Installation
 
 ```
-npm install modui-popup
+npm install modui-calendar
 ```
 
 ## Usage
 
-Use the static `open` method to popup a popup.
 
 ```javascript
-var ModuiPopup = require( 'modui-popup' );
+var ModuiCalendar = require( 'modui-calendar' );
 
-ModuiPopup.open( {
-  target : $( '#example' ),
-  contents : 'This is a popup balloon!'
-} );
+var calendar = new ModuiCalendar([options]);
 ```
 
-`contents` may either be a text/html string or a backbone view instance.
+### Options
 
-If you are using [parcelify](https://github.com/rotundasoftware/parcelify) or [cartero](https://github.com/rotundasoftware/cartero), the modui-popup styles will automatically be included in your css output. Otherwise, you'll need to include `moduiPopup.css` in your project manually.
+#### `numberOfMonths`
 
-### ModuiPopup.open() options
+`Number` The number of months to display vertically. Defaults to 1.
 
-The `ModuiPopup.open()` method may be passed an options argument with the following properties.
+#### `firstVisibleMonth`
 
-#### `target`
+`Number` A zero based index reference to the month that should be initially displayed (e.g. 0 = Jan, 11 = Dec) if there is no selected date. Defaults to the current month. If there is a selectedDate, the selectedDate month will be displayed.
 
-(required) Determines the element at which the popup will be pointed. May be a jquery object representing a DOM element or an instance of a backbone view.
+#### `selectedDate`
 
-#### `contents`
+`Date` The date to display as the current selected date. Defaults to none.  If a selectedDate is set it will override the `firstVisibleMonth`.
 
-(required) Determines the contents of the popup balloon. May be a text or html string, or an instance of a backbone view. If an instance of a view, the view's `render()` function will be called automatically when the popup is shown.
+#### `maxDate`
 
-#### `position`
+`Date` The maximum date to which the calendar can be navigated.
 
-(default: 'bottom center') Determines the position of the popup relative to its target. Valid positions are:
+#### `minDate`
 
-* top left
-* top center
-* top right
-* left center
-* right center
-* bottom left
-* bottom center
-* bottom right
+`Date` The minimum date to which the calendar can be navigated.
 
-See [the demo page](http://rotundasoftware.github.io/modui-popup/) for an interactive example.
+#### `getDateClasses`
 
-#### `distanceAway`
+'Function' A callback that is invoked for upon rendering each day in the calendar.  It is passed a date object representing that day and should return a string of space separted css classes to be added to that day element. Defaults to none.
 
-(default: 2) The number of pixels between the end of the balloon's pointer and the edge of the target element.
+#### `dayLabels`
 
-#### `pointerOffset`
+`Array` An array of strings that should be used as the day display labels.  This is useful for i18n. Defaults to
+```
+['Su', ..., Sa']
+```.
 
-(default: 0) Set to a positive or negative number of pixels to offset the pointer location that distance from its "default" location.
+#### `monthLabels`
 
-#### `keepWithinRect`
+`Array` An array of strings that should be used as the month display labels. This is useful for i18n. Defaults to
+```
+['January', ...,'December']
+```
 
-(default: the window rect) By default, `modui-popup` will reposition popups that fall off the screen. However you can use this option to ensure the balloon always stays within a rect that you supply. The value of this option should represent a rectangle and have `top`, `bottom`, `left`, and `right` properties.
+#### `weekStartsOnMonday`
 
-#### `closeOnOutsideClick`
+`bool` A boolean to display monday as the first day of the week.  This is useful for i18n.
 
-(default: true) When true, the popup will automatically close whenever the mouse is clicked outside of its area (and the area of its target element).
+### Public Methods
 
-#### `signature`
+#### `goNextMonth`
 
-(default: undefined) Two popups with the same signature will never be visible at one time. If a signature for the popup is provided, ModuiPopup.open() will check to see if an existing popup is open with that signature. If so, it will use that instance (i.e. it will fill the instance with the new contents and point it at the new target element) instead creating a new popup instance. The feature is especially useful when `closeOnOutsideClick` is `false`, since it provides a means to "close" one popup when another is opened.
+Moves calendar display to the next month.
 
-#### `onClose`
+#### `goPreviousMonth`
 
-(default: undefined) If provided, this callback method will be invoked when the popup is closed.
+Moves calendar display to the previous month.
+
+#### `setSelectedDate`
+
+Takes a `Date` object and sets the selected display date.
+
+#### `getSelectedDate`
+
+Returns a `Date` object representing the selected date.
+
+### Events
+
+#### `dateSelected`
+
+Triggered when the selectedDate is set.  This can be done either via the public method `setSelectedDate` or by selecting a date in the UI.  The event callback will be passed a `Date` object of the date that was selected.
+
+#### `monthChanged`
+
+Triggered when the displayMonth changes.  This can be done either via the public methods `goNextMonth` and `goPreviousMonth` or by navigating months in the UI.  The event callback will be passed a `Date` object representing the first day of that month.
 
 ## License
 MIT
