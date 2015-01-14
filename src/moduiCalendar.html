@@ -1,0 +1,39 @@
+<div class="modui-month">
+    <nav>
+        <a class="next-btn <% if(isNextBtnDisabled) { %> disabled <% } %>" data-increment="1"> &gt; </a>
+        <a class="prev-btn <% if(isPrevBtnDisabled) { %> disabled <% } %>" data-increment="-1"> &lt; </a>
+        <h6>
+            <% if(displayYearBeforeMonth) { %>
+                <%= month %> <%= year %>
+            <% } else { %>
+                <%= year %> <%= month %>
+            <% } %>
+        </h6>
+    </nav>
+    <table>
+        <thead>
+            <tr>
+                <% _.each(dayLabels, function(dayLabel) { %>
+                    <th><span><%= dayLabel %></span></th>
+                <% }) %>
+            </tr>
+        </thead>
+        <tbody>
+            <% _.each(weeks, function(week){ %>
+                <tr>
+                    <% _.each(week, function(day) { %>
+                        <% if(!day.isBlank) { %>
+                            <td class="day <%= day.classes %>" data-day="<%= day.number %>">
+                                    <a><%= day.number %></a>
+                            </td>
+                        <% } else { %>
+                            <td class="blank <%= day.classes %>">
+                                <a></a>
+                            </td>
+                        <% } %>
+                    <% }) %>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>

@@ -61,6 +61,10 @@ var calendar = new ModuiCalendar([options]);
 
 `bool` A boolean to display monday as the first day of the week.  This is useful for i18n.
 
+#### `displayMonthBeforeYear`
+
+`bool` A boolean to display the month before year vs. the year befor the month.  This is useful for i18n.
+
 ### Public Methods
 
 #### `goNextMonth`
