@@ -2,8 +2,7 @@
   "name": "modui-calendar",
   "version": "0.0.0",
   "description": "",
-  "main": "moduiCalendar.js",
-  "test": "test/test_moduiCalendar.js",
+  "main": "./build/moduiCalendar.js",
   "keywords": [
     "modui"
   ],
