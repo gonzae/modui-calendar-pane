@@ -41,18 +41,20 @@ var calendar = new ModuiCalendar([options]);
 
 #### `getDateClasses`
 
-'Function' A callback that is invoked for upon rendering each day in the calendar.  It is passed a date object representing that day and should return a string of space separted css classes to be added to that day element. Defaults to none.
+`Function` A callback that is invoked for upon rendering each day in the calendar.  It is passed a date object representing that day and should return a string of space separted css classes to be added to that day element. Defaults to none.
 
 #### `dayLabels`
 
 `Array` An array of strings that should be used as the day display labels.  This is useful for i18n. Defaults to
+
 ```
 ['Su', ..., Sa']
-```.
+```
 
 #### `monthLabels`
 
 `Array` An array of strings that should be used as the month display labels. This is useful for i18n. Defaults to
+
 ```
 ['January', ...,'December']
 ```
