@@ -1,39 +1,55 @@
-<div class="modui-month">
-    <nav>
-        <a class="next-btn <% if(isNextBtnDisabled) { %> disabled <% } %>" data-increment="1"> &gt; </a>
-        <a class="prev-btn <% if(isPrevBtnDisabled) { %> disabled <% } %>" data-increment="-1"> &lt; </a>
-        <h6>
-            <% if(displayYearBeforeMonth) { %>
-                <%= month %> <%= year %>
-            <% } else { %>
-                <%= year %> <%= month %>
+<% _.each(months, function(month) { %>
+    <div class="modui-month" data-month="<%= month.index %>" data-year="<%= month.year %>">
+        <nav>
+            <% if(month.isFirst) { %>
+                <a class="next-btn <% if(isNextBtnDisabled) { %> disabled <% } %>" data-nav="next">
+                    &#9654;
+                </a>
+                <a class="prev-btn <% if(isPrevBtnDisabled) { %> disabled <% } %>" data-nav="prev">
+                    &#9664;
+                </a>
             <% } %>
-        </h6>
-    </nav>
-    <table>
-        <thead>
-            <tr>
-                <% _.each(dayLabels, function(dayLabel) { %>
-                    <th><span><%= dayLabel %></span></th>
+            <h6>
+                <% if(displayYearBeforeMonth) { %>
+                    <%= month.year %> <%= month.label %>
+                <% } else { %>
+                    <%= month.label %> <%= month.year %>
+                <% } %>
+            </h6>
+        </nav>
+        <table>
+            <% if(month.isFirst) { %>
+                <thead>
+                    <tr>
+                        <% _.each(dayLabels, function(dayLabel) { %>
+                            <th>
+                                <span>
+                                    <%= dayLabel %>
+                                </span>
+                            </th>
+                        <% }) %>
+                    </tr>
+                </thead>
+            <% } %>
+            <tbody>
+                <% _.each(month.weeks, function(week){ %>
+                    <tr>
+                        <% _.each(week, function(day) { %>
+                            <% if(day.number) { %>
+                                <td class="day <%= day.classes %>" data-day="<%= day.number %>">
+                                    <a>
+                                        <%= day.number %>
+                                    </a>
+                                </td>
+                            <% } else { %>
+                                <td class="blank">
+                                    <a></a>
+                                </td>
+                            <% } %>
+                        <% }) %>
+                    </tr>
                 <% }) %>
-            </tr>
-        </thead>
-        <tbody>
-            <% _.each(weeks, function(week){ %>
-                <tr>
-                    <% _.each(week, function(day) { %>
-                        <% if(!day.isBlank) { %>
-                            <td class="day <%= day.classes %>" data-day="<%= day.number %>">
-                                    <a><%= day.number %></a>
-                            </td>
-                        <% } else { %>
-                            <td class="blank <%= day.classes %>">
-                                <a></a>
-                            </td>
-                        <% } %>
-                    <% }) %>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
+<% }) %>

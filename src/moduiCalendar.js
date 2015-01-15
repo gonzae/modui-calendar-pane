@@ -55,26 +55,26 @@ module.exports = Super.extend( {
     passMessages : { '*' : '.' }, // pass all courier messages directly through to parent view
     className : 'modui-calendar',
     initialize : function() {
-        this._resetDisplayDate();
+        this._currentDate = new Date();
+        this._initializeDisplayDates();
+        this.render();
     },
     render : function() {
         var calendarHtml = _.template(calendarTemplate)({
             dayLabels: this.dayLabels,
-            month: this.monthLabels[this._displayDate.getMonth()],
-            year: this._displayDate.getFullYear(),
-            isPrevBtnDisabled: this._isAtOrBeforeMinMonth(),
-            isNextBtnDisabled: this._isAtOrAfterMaxMonth(),
-            weeks: this._buildWeeks(),
+            isPrevBtnDisabled: this._isAtOrBeforeMinMonth(this._firstDisplayDate),
+            isNextBtnDisabled: this._isAtOrAfterMaxMonth(this._lastDisplayDate),
+            months: this._buildMonths(),
             displayYearBeforeMonth: this.displayYearBeforeMonth
         });
 
         this.$el.html(calendarHtml);
     },
     goNextMonth: function(){
-        this._changeMonth(1);
+        this._changeMonth('next');
     },
     goPreviousMonth: function(){
-        this._changeMonth(-1);
+        this._changeMonth('prev');
     },
     setSelectedDate:function(date){
         if(date){
@@ -88,7 +88,8 @@ module.exports = Super.extend( {
         }else{
             this.selectedDate = null;
         }
-        this._resetDisplayDate();
+
+        this.render();
         this.spawn("dateSelected", this.selectedDate);
     },
     setMinDate:function(date){
@@ -121,46 +122,57 @@ module.exports = Super.extend( {
 
         return this;
     },
-    _changeMonth: function(increment){
-        var newDisplayDate = new Date(
-            this._displayDate.getFullYear(),
-            this._displayDate.getMonth() + increment,
-            1
-        );
+    _changeMonth: function(direction){
+        var increment = (direction === "prev" ? -1 : 1) * this.numberOfMonths,
+            firstDisplayDate = new Date(
+                this._firstDisplayDate.getFullYear(),
+                this._firstDisplayDate.getMonth() + increment,
+                1
+            );
 
         this._currentDate = new Date();
-        this._displayDate = newDisplayDate;
+        this._setDisplayDateRange(firstDisplayDate);
         this.render();
-        this.spawn('monthChanged', newDisplayDate);
+        this.spawn('monthChanged', firstDisplayDate);
     },
-    _resetDisplayDate: function(){
+    _initializeDisplayDates: function(){
         var date;
 
-        this._currentDate = new Date();
-        if (this.selectedDate) {
+        if (this.firstVisibleDate) {
+            date = this._withinDateLimits(this.firstVisibleDate);
+        } else if (this.selectedDate) {
             date = this.selectedDate;
-        } else if (this.firstVisibleDate) {
-            date = this.firstVisibleDate;
-        } else if(this.minDate && this._currentDate < this.minDate) {
-            date = this.minDate;
-        } else if(this.maxDate && this._currentDate > this.maxDate) {
-            date = this.maxDate;
         } else {
-            date = this._currentDate;
+            date = this._withinDateLimits(this._currentDate);
         }
 
-        this._displayDate = new Date(date.getFullYear(), date.getMonth(), 1);
-        this.render();
+        this._setDisplayDateRange(new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            1
+        ));
     },
+    _setDisplayDateRange: function(firstDisplayDate){
+        this._firstDisplayDate = firstDisplayDate;
+        this._lastDisplayDate = new Date(
+            firstDisplayDate.getFullYear(),
+            firstDisplayDate.getMonth() + this.numberOfMonths - 1,
+            1
+        );
+    },
+
+    /********************
+    * Event handlers functions
+    *********************/
+
     _onDayClick:function(e){
         var $day = $(e.currentTarget),
-            day = parseInt($day.attr("data-day"), 10);
+            $month = $day.closest('.modui-month'),
+            year = $month.data('year'),
+            month = $month.data('month'),
+            day = $day.data('day');
 
-        this.setSelectedDate(new Date(
-            this._displayDate.getFullYear(),
-            this._displayDate.getMonth(),
-            day
-        ));
+        this.setSelectedDate(new Date(year, month, day));
     },
     _onChangeMonthClick:function(e){
         var $elem = $(e.currentTarget);
@@ -168,74 +180,87 @@ module.exports = Super.extend( {
         e.preventDefault();
 
         if(!$elem.hasClass("disabled")){
-            this._changeMonth($elem.data('increment'));
+            this._changeMonth($elem.data('nav'));
         }
     },
-    _isAtOrBeforeMinMonth: function(){
-        if (!this.minDate) {
+
+    /********************
+    * Date helper functions
+    *********************/
+
+    _withinDateLimits: function(date){
+        if(this.minDate && date < this.minDate) {
+            return this.minDate;
+        }
+
+        if(this.maxDate && date > this.maxDate) {
+            return this.maxDate;
+        }
+
+        return date;
+    },
+    _isSameMonth: function(date, date2){
+        if(!date || !date2){
             return false;
         }
 
         return (
-            this._displayDate.getFullYear() <= this.minDate.getFullYear() &&
-            this._displayDate.getMonth() <= this.minDate.getMonth()
+            date.getMonth() === date2.getMonth() &&
+            date.getFullYear() === date2.getFullYear()
         );
     },
-    _isAtOrAfterMaxMonth: function(){
-        if (!this.maxDate) {
+    _isSameDay: function(date, date2){
+        return (
+            this._isSameMonth(date, date2) &&
+            date.getDate() === date2.getDate()
+        );
+    },
+    _isAtOrBeforeMinMonth: function(date){
+        if(!this.minDate){
             return false;
         }
 
         return (
-            this._displayDate.getFullYear() >= this.maxDate.getFullYear() &&
-            this._displayDate.getMonth() >= this.maxDate.getMonth()
+            date.getFullYear() <= this.minDate.getFullYear() &&
+            date.getMonth() <= this.minDate.getMonth()
         );
     },
-    _isMinMonth: function(){
-        if (!this.minDate) {
+     _isBeforeMinDay: function(date){
+        return (
+            this._isAtOrBeforeMinMonth(date) &&
+            date.getDate() < this.minDate.getDate()
+        );
+    },
+    _isAtOrAfterMaxMonth: function(date){
+        if(!this.maxDate){
             return false;
         }
 
         return (
-            this._displayDate.getFullYear() === this.minDate.getFullYear() &&
-            this._displayDate.getMonth() === this.minDate.getMonth()
+            date.getFullYear() >= this.maxDate.getFullYear() &&
+            date.getMonth() >= this.maxDate.getMonth()
         );
     },
-    _isMaxMonth: function(){
-        if (!this.maxDate) {
-            return false;
-        }
-
+    _isAfterMaxDay: function(date){
         return (
-            this._displayDate.getFullYear() === this.maxDate.getFullYear() &&
-            this._displayDate.getMonth() === this.maxDate.getMonth()
+            this._isAtOrAfterMaxMonth(date) &&
+            date.getDate() > this.maxDate.getDate()
         );
     },
-    _isMonthOfSelectedDate: function(){
-        if (!this.selectedDate) {
-            return false;
-        }
-
-        return (
-            this.selectedDate.getMonth() === this._displayDate.getMonth() &&
-            this.selectedDate.getFullYear() === this._displayDate.getFullYear()
-        );
-    },
-    _isMonthOfCurrentDate: function(){
-        return (
-            this._currentDate.getMonth() === this._displayDate.getMonth() &&
-            this._currentDate.getFullYear() === this._displayDate.getFullYear()
-        );
-    },
-    _getDaysInMonth:function(){
+    _getDaysInMonth:function(date){
         return 32 - (new Date(
-            this._displayDate.getFullYear(),
-            this._displayDate.getMonth(),
+            date.getFullYear(),
+            date.getMonth(),
             32
         )).getDate();
     },
-    _getWeekdayIndexOfFirstDayInMonth: function(){
-        var index = this._displayDate.getDay() - (this.weekStartsMonday ? 1 : 0);
+    _getWeekdayIndexOfFirstDayInMonth: function(date){
+        var firstDayOfMonth = (new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                1
+            )),
+            index = firstDayOfMonth.getDay() - (this.weekStartsMonday ? 1 : 0);
 
         if(index > - 1) {
           return index;
@@ -243,73 +268,93 @@ module.exports = Super.extend( {
 
         return 7 + index;
     },
-    _buildWeeks:function(){
+
+
+    /********************
+    * Template data building functions
+    *********************/
+
+    _buildMonths: function(){
+        var i = 0,
+            date,
+            firstDisplayDate = this._firstDisplayDate,
+            firstDisplayDateYear = firstDisplayDate.getFullYear(),
+            months = [];
+
+        for(i; i < this.numberOfMonths; i++){
+            date = new Date(
+                firstDisplayDateYear,
+                firstDisplayDate.getMonth() + i,
+                1
+            );
+            months.push({
+                isFirst: i === 0,
+                label: this.monthLabels[date.getMonth()],
+                year: date.getFullYear(),
+                index: date.getMonth(),
+                weeks: this._buildWeeks(date),
+            });
+        }
+        return months;
+    },
+    _buildWeeks:function(date){
         var daysBuilt = 0,
             i,
             day,
             weeks = [],
             days,
-            displayYear = this._displayDate.getFullYear(),
-            displayMonth = this._displayDate.getMonth(),
-            currentDay = this._currentDate.getDate(),
-            firstDayIndex = this._getWeekdayIndexOfFirstDayInMonth(),
-            daysInMonth = this._getDaysInMonth(),
-            isMinMonth = this._isMinMonth(),
-            minDay = isMinMonth ? this.minDate.getDate() : null,
-            isMaxMonth = this._isMaxMonth(),
-            maxDay = isMinMonth ? this.maxDate.getDate() : null,
-            isSelectedMonth = this._isMonthOfSelectedDate(),
-            selectedDay = isSelectedMonth ? this.selectedDate.getDate() : null,
-            isCurrentMonth = this._isMonthOfCurrentDate(),
-            daysToBeBuilt = 7 * Math.ceil( (daysInMonth + firstDayIndex) / 7 );
+            dayNumber,
+            firstDayIndex = this._getWeekdayIndexOfFirstDayInMonth(date),
+            dayCount = this._getDaysInMonth(date),
+            daysToBeBuilt = 7 * Math.ceil( (dayCount + firstDayIndex) / 7 );
 
         while(daysBuilt < daysToBeBuilt){
-
             days = [];
-
             for(i = 0; i < 7; i++){
-                day = {
-                    number: (daysBuilt - firstDayIndex) + 1
-                };
-                if( daysBuilt < firstDayIndex || day.number > daysInMonth){
-                    day.isBlank = true;
-                    if( day.number === daysInMonth + 1 ){
-                        day.classes = 'first-end-filler';
-                    }
-                }else{
-                    day.classes = [];
-                    if( isSelectedMonth && selectedDay === day.number ){
-                        day.classes.push('selected-day');
-                    }
-
-                    if( isCurrentMonth && currentDay === day.number) {
-                        day.classes.push('today');
-                    }
-
-                    if(
-                        ( isMinMonth && daysBuilt >= firstDayIndex && day.number < minDay) ||
-                        ( isMaxMonth && day.number > maxDay && day.number <= daysInMonth )
-                    ) {
-                        day.classes.push('out-of-range');
-                    }
-
-                    if (this.getDateClasses){
-                        day.classes.push(
-                            this.getDateClasses(new Date(displayYear, displayMonth, day.number))
-                        );
-                    }
-
-                    day.classes = day.classes.join(' ');
+                dayNumber = daysBuilt - firstDayIndex + 1;
+                if (daysBuilt < firstDayIndex || dayNumber > dayCount) {
+                    day = {};
+                } else {
+                    date.setDate(dayNumber);
+                    day = this._buildDay(date);
                 }
 
                 days.push(day);
-
                 ++daysBuilt;
             }
-
             weeks.push(days);
         }
 
         return weeks;
+    },
+    _buildDay: function(date) {
+        var day = {
+            number: date.getDate(),
+            classes: []
+        };
+
+        if( this._isSameDay(date, this.selectedDate) ){
+            day.classes.push('selected-day');
+        }
+
+        if( this._isSameDay(date, this._currentDate) ) {
+            day.classes.push('today');
+        }
+
+        if(
+            this._isBeforeMinDay(date) ||
+            this._isAfterMaxDay(date)
+        ) {
+            day.classes.push('out-of-range disabled');
+        }
+
+        if (this.getDateClasses) {
+            day.classes.push(
+                this.getDateClasses(date)
+            );
+        }
+
+        day.classes = day.classes.join(' ');
+        return day;
     }
 } );
