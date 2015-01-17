@@ -33,11 +33,11 @@ var calendar = new ModuiCalendar([options]);
 
 #### `maxDate`
 
-`Date` The maximum date to which the calendar can be navigated.
+`Date` The maximum date to which the calendar can be selected.
 
 #### `minDate`
 
-`Date` The minimum date to which the calendar can be navigated.
+`Date` The minimum date to which the calendar can be selected.
 
 #### `getDateClasses`
 

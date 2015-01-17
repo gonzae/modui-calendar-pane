@@ -42,6 +42,7 @@ module.exports = Super.extend( {
             'displayYearBeforeMonth': false
         }
     ],
+    template: _.template(calendarTemplate),
     ui : {
         'nextBtn' : '.next-btn',
         'prevBtn' : '.prev-btn',
@@ -52,23 +53,20 @@ module.exports = Super.extend( {
         'click prevBtn': '_onChangeMonthClick',
         'click dayBtn': '_onDayClick'
     },
-    passMessages : { '*' : '.' }, // pass all courier messages directly through to parent view
     className : 'modui-calendar',
     initialize : function() {
         this._currentDate = new Date();
         this._initializeDisplayDates();
         this.render();
     },
-    render : function() {
-        var calendarHtml = _.template(calendarTemplate)({
+    _getTemplateData : function() {
+        return {
             dayLabels: this.dayLabels,
             isPrevBtnDisabled: this._isAtOrBeforeMinMonth(this._firstDisplayDate),
             isNextBtnDisabled: this._isAtOrAfterMaxMonth(this._lastDisplayDate),
             months: this._buildMonths(),
             displayYearBeforeMonth: this.displayYearBeforeMonth
-        });
-
-        this.$el.html(calendarHtml);
+        };
     },
     goNextMonth: function(){
         this._changeMonth('next');
@@ -122,6 +120,8 @@ module.exports = Super.extend( {
 
         return this;
     },
+
+
     _changeMonth: function(direction){
         var increment = (direction === "prev" ? -1 : 1) * this.numberOfMonths,
             firstDisplayDate = new Date(
@@ -139,13 +139,13 @@ module.exports = Super.extend( {
         var date;
 
         if (this.firstVisibleDate) {
-            date = this._withinDateLimits(this.firstVisibleDate);
+            date = this.firstVisibleDate;
         } else if (this.selectedDate) {
             date = this.selectedDate;
         } else {
-            date = this._withinDateLimits(this._currentDate);
+            date = this._currentDate;
         }
-
+        date = this._withinDateLimits(date);
         this._setDisplayDateRange(new Date(
             date.getFullYear(),
             date.getMonth(),
@@ -199,19 +199,10 @@ module.exports = Super.extend( {
 
         return date;
     },
-    _isSameMonth: function(date, date2){
-        if(!date || !date2){
-            return false;
-        }
-
-        return (
-            date.getMonth() === date2.getMonth() &&
-            date.getFullYear() === date2.getFullYear()
-        );
-    },
     _isSameDay: function(date, date2){
         return (
-            this._isSameMonth(date, date2) &&
+            date.getMonth() === date2.getMonth() &&
+            date.getFullYear() === date2.getFullYear() &&
             date.getDate() === date2.getDate()
         );
     },
