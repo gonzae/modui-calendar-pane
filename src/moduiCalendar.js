@@ -14,7 +14,7 @@ module.exports = Super.extend( {
         {
             'numberOfMonths': 1
         },
-        'firstVisibleDate',
+        'firstVisibleMonth',
         'selectedDate',
         'maxDate',
         'minDate',
@@ -57,16 +57,10 @@ module.exports = Super.extend( {
     initialize : function() {
         this._currentDate = new Date();
         this._initializeDisplayDates();
+        if (this.weekStartsMonday) {
+            this.dayLabels.push(this.dayLabels.shift());
+        }
         this.render();
-    },
-    _getTemplateData : function() {
-        return {
-            dayLabels: this.dayLabels,
-            isPrevBtnDisabled: this._isAtOrBeforeMinMonth(this._firstDisplayDate),
-            isNextBtnDisabled: this._isAtOrAfterMaxMonth(this._lastDisplayDate),
-            months: this._buildMonths(),
-            displayYearBeforeMonth: this.displayYearBeforeMonth
-        };
     },
     goNextMonth: function(){
         this._changeMonth('next');
@@ -74,7 +68,26 @@ module.exports = Super.extend( {
     goPreviousMonth: function(){
         this._changeMonth('prev');
     },
-    setSelectedDate:function(date){
+
+
+    /********************
+    * Privates
+    *********************/
+
+    _onOptionsChanged: function(options){
+        if('selectedDate' in options){
+            this._setSelectedDate(options.selectedDate);
+        }
+
+        if('minDate' in options){
+            this._setMinDate(options.minDate);
+        }
+
+        if('maxDate' in options){
+            this._setMaxDate(options.maxDate);
+        }
+    },
+    _setSelectedDate:function(date){
         if(date){
             if(this.minDate && date < this.minDate){
                 this.selectedDate = new Date(this.minDate);
@@ -90,7 +103,7 @@ module.exports = Super.extend( {
         this.render();
         this.spawn("dateSelected", this.selectedDate);
     },
-    setMinDate:function(date){
+    _setMinDate:function(date){
         if(date){
             if(this.selectedDate && date > this.selectedDate){
                 this.minDate = new Date(this.selectedDate);
@@ -105,7 +118,7 @@ module.exports = Super.extend( {
 
         return this;
     },
-    setMaxDate:function(date){
+    _setMaxDate:function(date){
         if(date){
             if(this.selectedDate && date < this.selectedDate){
                 this.maxDate = new Date(this.selectedDate);
@@ -120,8 +133,6 @@ module.exports = Super.extend( {
 
         return this;
     },
-
-
     _changeMonth: function(direction){
         var increment = (direction === "prev" ? -1 : 1) * this.numberOfMonths,
             firstDisplayDate = new Date(
@@ -138,8 +149,8 @@ module.exports = Super.extend( {
     _initializeDisplayDates: function(){
         var date;
 
-        if (this.firstVisibleDate) {
-            date = this.firstVisibleDate;
+        if (this.firstVisibleMonth) {
+            date = this.firstVisibleMonth;
         } else if (this.selectedDate) {
             date = this.selectedDate;
         } else {
@@ -172,7 +183,7 @@ module.exports = Super.extend( {
             month = $month.data('month'),
             day = $day.data('day');
 
-        this.setSelectedDate(new Date(year, month, day));
+        this.setOptions({'selectedDate': new Date(year, month, day)});
     },
     _onChangeMonthClick:function(e){
         var $elem = $(e.currentTarget);
@@ -187,7 +198,6 @@ module.exports = Super.extend( {
     /********************
     * Date helper functions
     *********************/
-
     _withinDateLimits: function(date){
         if(this.minDate && date < this.minDate) {
             return this.minDate;
@@ -199,11 +209,53 @@ module.exports = Super.extend( {
 
         return date;
     },
+    _isSelectedDay: function(date){
+        if(!this.selectedDate){
+            return false;
+        }
+
+        return this._isSameDay(date, this.selectedDate);
+    },
+    _isCurrentDay: function(date){
+        return this._isSameDay(date, this._currentDate);
+    },
     _isSameDay: function(date, date2){
         return (
             date.getMonth() === date2.getMonth() &&
             date.getFullYear() === date2.getFullYear() &&
             date.getDate() === date2.getDate()
+        );
+    },
+    _isBeforeMinDay: function(date){
+        if(!this.minDate){
+            return false;
+        }
+
+        return (
+            date.getFullYear() <= this.minDate.getFullYear() &&
+            (
+                date.getMonth() < this.minDate.getMonth() ||
+                (
+                    date.getMonth() === this.minDate.getMonth() &&
+                    date.getDate() < this.minDate.getDate()
+                )
+            )
+        );
+    },
+    _isAfterMaxDay: function(date){
+        if(!this.maxDate){
+            return false;
+        }
+
+        return (
+            date.getFullYear() >= this.maxDate.getFullYear() &&
+            (
+                date.getMonth() > this.maxDate.getMonth() ||
+                (
+                    date.getMonth() === this.maxDate.getMonth() &&
+                    date.getDate() > this.maxDate.getDate()
+                )
+            )
         );
     },
     _isAtOrBeforeMinMonth: function(date){
@@ -216,12 +268,6 @@ module.exports = Super.extend( {
             date.getMonth() <= this.minDate.getMonth()
         );
     },
-     _isBeforeMinDay: function(date){
-        return (
-            this._isAtOrBeforeMinMonth(date) &&
-            date.getDate() < this.minDate.getDate()
-        );
-    },
     _isAtOrAfterMaxMonth: function(date){
         if(!this.maxDate){
             return false;
@@ -230,12 +276,6 @@ module.exports = Super.extend( {
         return (
             date.getFullYear() >= this.maxDate.getFullYear() &&
             date.getMonth() >= this.maxDate.getMonth()
-        );
-    },
-    _isAfterMaxDay: function(date){
-        return (
-            this._isAtOrAfterMaxMonth(date) &&
-            date.getDate() > this.maxDate.getDate()
         );
     },
     _getDaysInMonth:function(date){
@@ -264,6 +304,15 @@ module.exports = Super.extend( {
     /********************
     * Template data building functions
     *********************/
+    _getTemplateData : function() {
+        return {
+            dayLabels: this.dayLabels,
+            isPrevBtnDisabled: this._isAtOrBeforeMinMonth(this._firstDisplayDate),
+            isNextBtnDisabled: this._isAtOrAfterMaxMonth(this._lastDisplayDate),
+            months: this._buildMonths(),
+            displayYearBeforeMonth: this.displayYearBeforeMonth
+        };
+    },
 
     _buildMonths: function(){
         var i = 0,
@@ -290,33 +339,39 @@ module.exports = Super.extend( {
     },
     _buildWeeks:function(date){
         var daysBuilt = 0,
-            i,
-            day,
             weeks = [],
-            days,
-            dayNumber,
+            week,
             firstDayIndex = this._getWeekdayIndexOfFirstDayInMonth(date),
             dayCount = this._getDaysInMonth(date),
             daysToBeBuilt = 7 * Math.ceil( (dayCount + firstDayIndex) / 7 );
 
         while(daysBuilt < daysToBeBuilt){
-            days = [];
-            for(i = 0; i < 7; i++){
-                dayNumber = daysBuilt - firstDayIndex + 1;
-                if (daysBuilt < firstDayIndex || dayNumber > dayCount) {
-                    day = {};
-                } else {
-                    date.setDate(dayNumber);
-                    day = this._buildDay(date);
-                }
-
-                days.push(day);
-                ++daysBuilt;
-            }
-            weeks.push(days);
+            week = this._buildWeek(date, dayCount, daysBuilt, firstDayIndex);
+            weeks.push(week);
+            daysBuilt += 7;
         }
 
         return weeks;
+    },
+    _buildWeek: function(date, dayCount, daysBuilt, firstDayIndex){
+        var week = [],
+            day,
+            dayNumber,
+            i=0;
+
+        for(i; i < 7; i++){
+            dayNumber = daysBuilt - firstDayIndex + 1;
+            if (daysBuilt < firstDayIndex || dayNumber > dayCount) {
+                day = {};
+            } else {
+                date.setDate(dayNumber);
+                day = this._buildDay(date);
+            }
+            daysBuilt++;
+            week.push(day);
+        }
+
+        return week;
     },
     _buildDay: function(date) {
         var day = {
@@ -324,11 +379,11 @@ module.exports = Super.extend( {
             classes: []
         };
 
-        if( this._isSameDay(date, this.selectedDate) ){
+        if( this._isSelectedDay(date) ){
             day.classes.push('selected-day');
         }
 
-        if( this._isSameDay(date, this._currentDate) ) {
+        if( this._isCurrentDay(date) ) {
             day.classes.push('today');
         }
 

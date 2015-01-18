@@ -6,7 +6,7 @@ var calendar = new Calendar({
     selectedDate: new Date(2015, 4, 2),
     minDate: new Date(2014, 9, 13),
     maxDate: new Date(2015, 4, 23),
-    firstVisibleDate: new Date(2015, 2, 3),
+    firstVisibleMonth: new Date(2015, 2, 3),
     monthLabels: [
         'Jan',
         'Feb',
@@ -22,7 +22,7 @@ var calendar = new Calendar({
         'Dec',
     ],
     dayLabels: [
-        'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'
+        'Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'
     ],
     weekStartsMonday: true,
     getDateClasses: function(date){

@@ -10,7 +10,6 @@ npm install modui-calendar
 
 ## Usage
 
-
 ```javascript
 var ModuiCalendar = require( 'modui-calendar' );
 
@@ -25,23 +24,23 @@ var calendar = new ModuiCalendar([options]);
 
 #### `firstVisibleMonth`
 
-`Number` A zero based index reference to the month that should be initially displayed (e.g. 0 = Jan, 11 = Dec) if there is no selected date. Defaults to the current month. If there is a selectedDate, the selectedDate month will be displayed.
+`Date` A date that has the year and month set to the initial month that you want to display initially. The value of `firstVisibleMonth` defaualts to none. If `firstVisibleMonth` is not set and there is a `selectedDate`, the `selectedDate` month will be displayed initially. Finally if neither of those are set the current month is displayed initially.
 
 #### `selectedDate`
 
-`Date` The date to display as the current selected date. Defaults to none.  If a selectedDate is set it will override the `firstVisibleMonth`.
+`Date` The date to display as the current selected date. No default.
 
 #### `maxDate`
 
-`Date` The maximum date to which the calendar can be selected.
+`Date` The maximum date to which the calendar can be selected. No default.
 
 #### `minDate`
 
-`Date` The minimum date to which the calendar can be selected.
+`Date` The minimum date to which the calendar can be selected. No default.
 
 #### `getDateClasses`
 
-`Function` A callback that is invoked for upon rendering each day in the calendar.  It is passed a date object representing that day and should return a string of space separted css classes to be added to that day element. Defaults to none.
+`Function` A callback that is invoked for upon rendering each day in the calendar.  It is passed a date object representing that day and should return a string of space separated css classes to be added to that day element. No default.
 
 #### `dayLabels`
 
@@ -50,6 +49,7 @@ var calendar = new ModuiCalendar([options]);
 ```
 ['Su', ..., Sa']
 ```
+##### Note: The list should always start with what you want to represent Sunday.  If you want your calendar weeks to begin with 	Monday, use the `weekStartsOnMonday` option.
 
 #### `monthLabels`
 
@@ -58,14 +58,15 @@ var calendar = new ModuiCalendar([options]);
 ```
 ['January', ...,'December']
 ```
+##### Note: The list should always start with what you want to represent January.
 
 #### `weekStartsOnMonday`
 
-`bool` A boolean to display monday as the first day of the week.  This is useful for i18n.
+`bool` A boolean to display monday as the first day of the week.  This is useful for i18n. Defaults to `false`.
 
-#### `displayMonthBeforeYear`
+#### `displayYearBeforeMonth`
 
-`bool` A boolean to display the month before year vs. the year befor the month.  This is useful for i18n.
+`bool` A boolean to display the month before year vs. the year befor the month.  This is useful for i18n. Defaults to `false`.
 
 ### Public Methods
 
@@ -77,23 +78,39 @@ Moves calendar display to the next month.
 
 Moves calendar display to the previous month.
 
-#### `setSelectedDate`
-
-Takes a `Date` object and sets the selected display date.
-
-#### `getSelectedDate`
-
-Returns a `Date` object representing the selected date.
-
 ### Events
 
 #### `dateSelected`
 
-Triggered when the selectedDate is set.  This can be done either via the public method `setSelectedDate` or by selecting a date in the UI.  The event callback will be passed a `Date` object of the date that was selected.
+Triggered when `selectedDate` is set.  This can be done either via the public method `setOptions({selectedDate: someDate})` or by selecting a date in the UI.  The event callback will be passed a `Date` object of the date that was selected.
 
 #### `monthChanged`
 
 Triggered when the displayMonth changes.  This can be done either via the public methods `goNextMonth` and `goPreviousMonth` or by navigating months in the UI.  The event callback will be passed a `Date` object representing the first day of that month.
+
+## Development
+
+modui-calendar is a CommonJs modules and therefore the demo is built using browserify. The module also leverages sass for it's style.  The following commands may be handy for development.
+
+```
+# developing the js
+$ watchify -t /path/to/brfs /path/to/modui-calendar/demo/demo.js -o /path/to/modui-calenar/build/demo.js --debug
+
+# developing the scss
+$ sass --watch /path/to/modui-calendar/demo/demo.scss:/path/to/modui-calendar/build/demo.css
+```
+
+You can then review your changes the output in the demo.html file.
+
+## Build
+
+```
+# making js build
+$ browserify -t /path/to/brfs /path/to/modui-calendar/src/moduiCalendar.js > /path/to/modui-calenar/build/moduiCalendar.js
+
+# making scss build
+sass /path/to/modui-calendar/src/moduiCalendar.scss:/path/to/modui-calendar/build/moduiCalendar.css --style compressed
+```
 
 ## License
 MIT
