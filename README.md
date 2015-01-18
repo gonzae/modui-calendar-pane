@@ -24,7 +24,7 @@ var calendar = new ModuiCalendar([options]);
 
 #### `firstVisibleMonth`
 
-`Date` A date that has the year and month set to the initial month that you want to display initially. The value of `firstVisibleMonth` defaualts to none. If `firstVisibleMonth` is not set and there is a `selectedDate`, the `selectedDate` month will be displayed initially. Finally if neither of those are set the current month is displayed initially.
+`Date` A date that has the year and month set to the month/year that you want to display initially. While the value of `firstVisibleMonth` has no default, an initial month/year will be determined if it is not set. If there is a `selectedDate`, the `selectedDate` month will be displayed initially. If neither `firstVisibleMonth` or `selectedDate` are set the current month is displayed initially.
 
 #### `selectedDate`
 
@@ -32,33 +32,23 @@ var calendar = new ModuiCalendar([options]);
 
 #### `maxDate`
 
-`Date` The maximum date to which the calendar can be selected. No default.
+`Date` The maximum date that can be selected. No default.
 
 #### `minDate`
 
-`Date` The minimum date to which the calendar can be selected. No default.
+`Date` The minimum date that can be selected. No default.
 
 #### `getDateClasses`
 
-`Function` A callback that is invoked for upon rendering each day in the calendar.  It is passed a date object representing that day and should return a string of space separated css classes to be added to that day element. No default.
+`Function` A callback that is called when rendering each day in the calendar.  It is passed a date object representing that day and should return a `String` of space separated css classes to be added to that day element. No default.
 
 #### `dayLabels`
 
-`Array` An array of strings that should be used as the day display labels.  This is useful for i18n. Defaults to
-
-```
-['Su', ..., Sa']
-```
-##### Note: The list should always start with what you want to represent Sunday.  If you want your calendar weeks to begin with 	Monday, use the `weekStartsOnMonday` option.
+`Array` An array of strings that should be used as the day display labels.  This is useful for i18n. Defaults to `['Su', ..., Sa']`. The list should always start with what you want to represent Sunday.  If you want your calendar weeks to begin with 	Monday, use the `weekStartsOnMonday` option.
 
 #### `monthLabels`
 
-`Array` An array of strings that should be used as the month display labels. This is useful for i18n. Defaults to
-
-```
-['January', ...,'December']
-```
-##### Note: The list should always start with what you want to represent January.
+`Array` An array of strings that should be used as the month display labels. This is useful for i18n. Defaults to `['January', ...,'December']`. The list should always start with what you want to represent January.
 
 #### `weekStartsOnMonday`
 
@@ -66,17 +56,17 @@ var calendar = new ModuiCalendar([options]);
 
 #### `displayYearBeforeMonth`
 
-`bool` A boolean to display the month before year vs. the year befor the month.  This is useful for i18n. Defaults to `false`.
+`bool` A boolean to display the year before the month vs. the month before the year.  This is useful for i18n. Defaults to `false`.
 
 ### Public Methods
 
 #### `goNextMonth`
 
-Moves calendar display to the next month.
+Moves the calendar display to the next month.
 
 #### `goPreviousMonth`
 
-Moves calendar display to the previous month.
+Moves the calendar display to the previous month.
 
 ### Events
 
@@ -86,11 +76,11 @@ Triggered when `selectedDate` is set.  This can be done either via the public me
 
 #### `monthChanged`
 
-Triggered when the displayMonth changes.  This can be done either via the public methods `goNextMonth` and `goPreviousMonth` or by navigating months in the UI.  The event callback will be passed a `Date` object representing the first day of that month.
+Triggered when the displayMonth changes.  This can be done either via the public methods `goNextMonth` and `goPreviousMonth` or by navigating months in the UI.  The event callback will be passed a `Date` object representing the first day of the new display month. If `numberOfMonths` is greater than 1, the callback will be passed a `Date` representing the first day of the first month that is displayed.
 
 ## Development
 
-modui-calendar is a CommonJs modules and therefore the demo is built using browserify. The module also leverages sass for it's style.  The following commands may be handy for development.
+modui-calendar is a CommonJs module. To compile it you can you use browserify. The module also leverages sass for it's style.  The following commands may be handy for development.
 
 ```
 # developing the js
