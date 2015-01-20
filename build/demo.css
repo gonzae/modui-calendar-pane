@@ -1,1 +1,111 @@
-.modui-calendar{padding:2px;border:1px solid #aaa;background-color:#FFF;display:inline-block;border-radius:5px;font-family:Arial, Helvetica, sans-serif}.modui-calendar .modui-month{margin:10px 0 0 0}.modui-calendar .modui-month:first-child{margin:0}.modui-calendar .modui-month:first-child nav{background-color:#87CEFF;background:-webkit-gradient(linear, left top, left bottom, from(#87CEFF), to(#6cb5e3));background:-webkit-linear-gradient(top, #87CEFF, #6cb5e3);background:-moz-linear-gradient(top, #87CEFF, #6cb5e3);background:-ms-linear-gradient(top, #87CEFF, #6cb5e3);background:-o-linear-gradient(top, #87CEFF, #6cb5e3);color:#fff;text-shadow:0 -1px 0 rgba(68,68,68,0.4);margin:0}.modui-calendar a{cursor:pointer}.modui-calendar table{margin:0;border-width:0;width:auto}.modui-calendar nav{overflow:hidden;padding:5px;border-bottom:1px solid #fff;border-radius:3px;background-color:#fff;border:1px solid #87CEFF;color:#87CEFF;margin:0 0 5px 0}.modui-calendar h6{text-align:center;line-height:19px;padding:0;margin:0;font-size:13px}.modui-calendar th{padding:0;cursor:default}.modui-calendar th span{display:block;color:#666;font-weight:bold;font-size:11px;padding:5px}.modui-calendar td{background:#f9f9f9;padding:0;border:1px solid #ddd}.modui-calendar td a{display:block;padding:5px;text-decoration:none;text-align:center;font-size:12px}.modui-calendar td.day{color:#777}.modui-calendar td.day:hover{background-color:#87CEFF;color:#fff}.modui-calendar td.today{color:#333;font-weight:bold}.modui-calendar td.today:hover{background-color:#87CEFF;color:#fff}.modui-calendar td.selected-day{background-color:#999;font-weight:bold;color:#fff}.modui-calendar td.selected-day:hover{background-color:#999}.modui-calendar td.out-of-range{color:#777}.modui-calendar td.out-of-range:hover{color:#777;background-color:#f9f9f9}.modui-calendar td.out-of-range a{cursor:default}.modui-calendar td.blank{background-color:transparent;border:none}.modui-calendar td.blank a{cursor:default}.modui-calendar .nav-btn,.modui-calendar .prev-btn,.modui-calendar .next-btn{display:block;line-height:19px;width:18px;height:18px;color:#87CEFF;text-decoration:none;font-size:8px;background-color:#fff;border-radius:10px;text-align:center}.modui-calendar .nav-btn:hover,.modui-calendar .prev-btn:hover,.modui-calendar .next-btn:hover{color:#666}.modui-calendar .nav-btn.disabled:hover,.modui-calendar .disabled.prev-btn:hover,.modui-calendar .disabled.next-btn:hover{color:#87CEFF}.modui-calendar .prev-btn{float:left}.modui-calendar .next-btn{float:right}.modui-calendar .disabled{opacity:0.5}.modui-month .divisible-by-3 a{color:orange}
+.modui-calendar {
+  padding: 2px;
+  border: 1px solid #aaa;
+  background-color: #FFF;
+  display: inline-block;
+  border-radius: 5px;
+  font-family: Arial, Helvetica, sans-serif; }
+  .modui-calendar .modui-month {
+    margin: 10px 0 0 0; }
+    .modui-calendar .modui-month:first-child {
+      margin: 0; }
+      .modui-calendar .modui-month:first-child nav {
+        background-color: #87CEFF;
+        background: -webkit-gradient(linear, left top, left bottom, from(#87CEFF), to(#6cb5e3));
+        background: -webkit-linear-gradient(top, #87CEFF, #6cb5e3);
+        background: -moz-linear-gradient(top, #87CEFF, #6cb5e3);
+        background: -ms-linear-gradient(top, #87CEFF, #6cb5e3);
+        background: -o-linear-gradient(top, #87CEFF, #6cb5e3);
+        color: #fff;
+        text-shadow: 0 -1px 0 rgba(68, 68, 68, 0.4);
+        margin: 0; }
+  .modui-calendar a {
+    cursor: pointer; }
+  .modui-calendar table {
+    margin: 0;
+    border-width: 0;
+    width: auto; }
+  .modui-calendar nav {
+    overflow: hidden;
+    padding: 5px;
+    border-bottom: 1px solid #fff;
+    border-radius: 3px;
+    background-color: #fff;
+    border: 1px solid #87CEFF;
+    color: #87CEFF;
+    margin: 0 0 5px 0; }
+  .modui-calendar h6 {
+    text-align: center;
+    line-height: 19px;
+    padding: 0;
+    margin: 0;
+    font-size: 13px; }
+  .modui-calendar th {
+    padding: 0;
+    cursor: default; }
+    .modui-calendar th span {
+      display: block;
+      color: #666;
+      font-weight: bold;
+      font-size: 11px;
+      padding: 5px; }
+  .modui-calendar td {
+    background: #f9f9f9;
+    padding: 0;
+    border: 1px solid #ddd; }
+    .modui-calendar td a {
+      display: block;
+      padding: 5px;
+      text-decoration: none;
+      text-align: center;
+      font-size: 12px; }
+  .modui-calendar td.day {
+    color: #777; }
+    .modui-calendar td.day:hover {
+      background-color: #87CEFF;
+      color: #fff; }
+  .modui-calendar td.today {
+    color: #333;
+    font-weight: bold; }
+    .modui-calendar td.today:hover {
+      background-color: #87CEFF;
+      color: #fff; }
+  .modui-calendar td.selected-day {
+    background-color: #999;
+    font-weight: bold;
+    color: #fff; }
+    .modui-calendar td.selected-day:hover {
+      background-color: #999; }
+  .modui-calendar td.out-of-range {
+    color: #777; }
+    .modui-calendar td.out-of-range:hover {
+      color: #777;
+      background-color: #f9f9f9; }
+    .modui-calendar td.out-of-range a {
+      cursor: default; }
+  .modui-calendar td.blank {
+    background-color: transparent;
+    border: none; }
+    .modui-calendar td.blank a {
+      cursor: default; }
+  .modui-calendar .nav-btn, .modui-calendar .modui-calendar .prev-btn, .modui-calendar .modui-calendar .prev-btn, .modui-calendar .modui-calendar .next-btn, .modui-calendar .modui-calendar .next-btn {
+    display: block;
+    line-height: 19px;
+    width: 18px;
+    height: 18px;
+    color: #87CEFF;
+    text-decoration: none;
+    font-size: 8px;
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: center; }
+    .modui-calendar .nav-btn:hover, .modui-calendar .modui-calendar .prev-btn:hover, .modui-calendar .modui-calendar .prev-btn:hover, .modui-calendar .modui-calendar .next-btn:hover, .modui-calendar .modui-calendar .next-btn:hover {
+      color: #666; }
+    .modui-calendar .nav-btn.disabled:hover, .modui-calendar .modui-calendar .disabled.prev-btn:hover, .modui-calendar .modui-calendar .disabled.prev-btn:hover, .modui-calendar .modui-calendar .disabled.next-btn:hover, .modui-calendar .modui-calendar .disabled.next-btn:hover {
+      color: #87CEFF; }
+  .modui-calendar .prev-btn {
+    float: left; }
+  .modui-calendar .next-btn {
+    float: right; }
+  .modui-calendar .disabled {
+    opacity: 0.5; }
