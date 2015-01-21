@@ -8,14 +8,23 @@
   ],
   "author": "Rotunda Software",
   "license": "ISC",
+  "style": "src/*.scss",
   "dependencies": {
     "backbone": "^1.1.2",
     "jquery": "^2.1.1",
     "modui-base": "^0.1.5",
     "underscore": "^1.7.0"
   },
+  "browserify": {
+    "transform": [
+      "brfs"
+    ]
+  },
+  "transforms" : [ "sass-css-stream" ],
   "devDependencies": {
+    "brfs": "^1.2.0",
     "mocha": "^2.1.0",
+    "sass-css-stream": "^0.1.2",
     "should": "^4.4.4"
   }
 }
