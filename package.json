@@ -1,5 +1,5 @@
 {
-  "name": "modui-calendar",
+  "name": "modui-calendar-pane",
   "version": "0.0.0",
   "description": "",
   "main": "./build/moduiCalendar.js",
