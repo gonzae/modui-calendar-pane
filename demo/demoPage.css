@@ -1,3 +1,13 @@
 .modui-month .divisible-by-3 a{
 	color: orange;
 }
+
+td.day:hover {
+	background-color: #87CEFF;
+	color: #fff;
+}
+
+td.day.today {
+	color: #333;
+	font-weight: bold;
+}

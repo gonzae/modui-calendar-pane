@@ -2,7 +2,7 @@
   "name": "modui-calendar-pane",
   "version": "0.0.0",
   "description": "",
-  "main": "./build/moduiCalendar.js",
+  "main": "./src/moduiCalendarPane.js",
   "keywords": [
     "modui"
   ],
