@@ -1,6 +1,6 @@
 {
   "name": "modui-calendar-pane",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "./src/moduiCalendarPane.js",
   "keywords": [
@@ -20,7 +20,9 @@
       "brfs"
     ]
   },
-  "transforms" : [ "sass-css-stream" ],
+  "transforms": [
+    "sass-css-stream"
+  ],
   "devDependencies": {
     "brfs": "^1.2.0",
     "mocha": "^2.1.0",
