@@ -2,7 +2,7 @@ var Super = require( 'modui-base' );
 var _ = require( 'underscore' );
 var $ = require( 'jquery' );
 var fs = require( 'fs' );
-var template = fs.readFileSync( __dirname + '/moduiCalendarPane.html' ).toString();
+var tmpl = require( './moduiCalendarPane.tpl' );
 
 module.exports = Super.extend( {
 	options : [
@@ -43,7 +43,7 @@ module.exports = Super.extend( {
 		}
 	],
 
-	template : _.template( template ),
+	template : tmpl,
 
 	ui : {
 		'nextBtn' : '.next-btn',
