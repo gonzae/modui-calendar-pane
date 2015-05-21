@@ -1,6 +1,6 @@
 # modui-calendar
 
-A calendar for the backbone.js-based modui suite by [Adrian Adkison](https://github.com/trainiac).
+A calendar for the backbone.js-based modui suite. Byco [Adrian Adkison](https://github.com/trainiac).
 
 ## Installation
 
@@ -84,7 +84,7 @@ Triggered when the month being displayed changes, either via the public methods 
 
 ## Development
 
-modui-calendar is a CommonJs module. To compile its assets you can you use browserify and sass.
+modui-calendar is a CommonJS module. To compile its assets you can you use browserify and sass.
 
 ```
 # developing the js
