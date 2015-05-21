@@ -1,6 +1,6 @@
 # modui-calendar
 
-A calendar for the backbone.js-based modui suite. Byco [Adrian Adkison](https://github.com/trainiac).
+A calendar for the backbone.js-based modui suite. By [Adrian Adkison](https://github.com/trainiac).
 
 ## Installation
 
