@@ -1,6 +1,6 @@
 {
   "name": "modui-calendar-pane",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "./src/moduiCalendarPane.js",
   "keywords": [
@@ -16,7 +16,9 @@
     "underscore": "^1.7.0"
   },
   "browserify": {
-    "transform" : [ "node-underscorify" ]
+    "transform": [
+      "node-underscorify"
+    ]
   },
   "transforms": [
     "sass-css-stream"
