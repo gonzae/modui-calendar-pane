@@ -15,8 +15,10 @@
     "modui-base": "^0.1.5",
     "underscore": "^1.7.0"
   },
+  "browserify": {
+    "transform" : [ "node-underscorify" ]
+  },
   "transforms": [
-    "node-underscorify",
     "sass-css-stream"
   ],
   "devDependencies": {

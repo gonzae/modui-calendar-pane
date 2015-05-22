@@ -61,7 +61,7 @@ module.exports = Super.extend( {
 
 	initialize : function() {
 		this._currentDate = new Date();
-		this._initializeDisplayDates();
+		this._recalculateAndSetDisplayDateRange();
 		if( this.weekStartsMonday ) {
 			this.dayLabels.push( this.dayLabels.shift() );
 		}
@@ -111,6 +111,8 @@ module.exports = Super.extend( {
 		} else {
 			this.selectedDate = null;
 		}
+
+		this._recalculateAndSetDisplayDateRange();
 	},
 
 	_setMinDate : function( date ) {
@@ -159,7 +161,7 @@ module.exports = Super.extend( {
 		this.spawn( 'monthChanged', firstDisplayDate );
 	},
 
-	_initializeDisplayDates : function() {
+	_recalculateAndSetDisplayDateRange : function() {
 		var date;
 
 		if( this.firstVisibleMonth ) {

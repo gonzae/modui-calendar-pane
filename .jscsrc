@@ -5,6 +5,7 @@
     "disallowMixedSpacesAndTabs": true,
     "disallowNewlineBeforeBlockStatements": true,
     "disallowPaddingNewlinesInBlocks": true,
+    "disallowTrailingWhitespace": "ignoreEmptyLines",
     "requireSpaceAfterObjectKeys": true,
     "disallowSpaceAfterPrefixUnaryOperators": [ "+", "-", "~" ],
     "disallowSpaceBeforeBinaryOperators": [
