@@ -92,6 +92,7 @@ module.exports = Super.extend( {
 		if( 'maxDate' in options ) {
 			this._setMaxDate( options.maxDate );
 		}
+		this._recalculateAndSetDisplayDateRange();
 	},
 
 	_setSelectedDate : function( date ) {
