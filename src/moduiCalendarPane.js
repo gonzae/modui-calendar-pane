@@ -92,7 +92,10 @@ module.exports = Super.extend( {
 		if( 'maxDate' in options ) {
 			this._setMaxDate( options.maxDate );
 		}
-		this._recalculateAndSetDisplayDateRange();
+
+		if( 'firstVisibleMonth' in options ) {
+			this._recalculateAndSetDisplayDateRange();
+		}
 	},
 
 	_setSelectedDate : function( date ) {
